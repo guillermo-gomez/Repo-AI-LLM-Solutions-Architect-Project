@@ -1,0 +1,28 @@
+name: ISO AI - Recursos completos gratuitos
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "ISO-AI-Governance/download_iso_ai.py"
+      - "ISO-AI-Governance/CATALOGO_40_NORMAS.csv"
+      - ".github/workflows/iso-ai-free-resources.yml"
+permissions:
+  contents: read
+jobs:
+  nist-downloads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download authorized public NIST PDFs and create 5-level index
+        run: python ISO-AI-Governance/download_iso_ai.py --nist-only
+      - name: Upload ZIP as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ISO_IA_5_Niveles_NIST_Gratuitos
+          path: ISO-AI-Governance/ISO_IA_NIST_Recursos_Completos.zip
+          if-no-files-found: error
+          retention-days: 30
